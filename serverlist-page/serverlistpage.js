@@ -23,7 +23,8 @@ function OpenWindow() {
         minWidth: 850,
         minHeight: 550,
         width: 950,
-        height: 700
+        height: 700,
+        frame: false
     });
     // serverlistWindow.removeMenu();
     serverlistWindow.loadFile(path.join(__dirname, "serverlist.html"));
@@ -34,6 +35,10 @@ function OpenWindow() {
 
 ipcMain.on("GetServerList", async (event, arg) => {
     GetServerList().then((result) => {event.reply("GetServerList-Reply", result)});
+});
+
+ipcMain.on("ServerPage-CloseWindow", async (event, arg) => {
+    serverlistWindow.close();
 });
 
 function GetServerList() {
