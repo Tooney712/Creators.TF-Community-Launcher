@@ -37,9 +37,9 @@ ipcMain.on("GetServerList", async (event, arg) => {
     GetServerList().then((result) => {event.reply("GetServerList-Reply", result)});
 });
 
-ipcMain.on("ServerPage-CloseWindow", async (event, arg) => {
-    serverlistWindow.close();
-});
+ipcMain.on("ServerPage-CloseWindow", async (event, arg) => {serverlistWindow.close();});
+ipcMain.on("ServerPage-MaximizeWindow", async (event, arg) => {serverlistWindow.maximize();});
+ipcMain.on("ServerPage-MinimizeWindow", async (event, arg) => {serverlistWindow.minimize();});
 
 function GetServerList() {
     return new Promise((resolve, reject) => {
@@ -53,22 +53,22 @@ function GetServerList() {
 
         let req = https.get(apiEndpoint, options, res => {
             console.log(`statusCode: ${res.statusCode}`);
-                res.on('data', d => {
-                    if (res.statusCode != 200) {
-                        reject(`Failed accessing ${url}: ` + res.statusCode);
-                        return;
-                    }
-                    data.push(d);
-                });
-                res.on("end", function() {
-                    var buf = Buffer.concat(data);
-                    let parsed = JSON.parse(buf.toString());
-                    resolve(parsed);
-                });
+            res.on('data', d => {
+                if (res.statusCode != 200) {
+                    reject(`Failed accessing ${url}: ` + res.statusCode);
+                    return;
+                }
+                data.push(d);
             });
-            req.on('error', error => {
-                reject(error.toString());
+            res.on("end", function() {
+                var buf = Buffer.concat(data);
+                let parsed = JSON.parse(buf.toString());
+                resolve(parsed);
             });
-            req.end();
+        });
+        req.on('error', error => {
+            reject(error.toString());
+        });
+        req.end();
     });
 }

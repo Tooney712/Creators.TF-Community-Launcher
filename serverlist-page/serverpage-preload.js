@@ -28,7 +28,13 @@ window.addEventListener("DOMContentLoaded", () => {
     ipcRenderer.send("GetServerList", "");
     container = document.getElementById("server-container");
 
-    document.getElementById("close").addEventListener("click", (e) => {ipcRenderer.send("ServerPage-CloseWindow", "");})
+    const btnMinimize = document.getElementById("minimize");
+    var btnMaximize = document.getElementById("maximize");
+    var btnMaximizeI = document.getElementById("maximizeIco");
+    const btnClose = document.getElementById("close");
+    btnMinimize.addEventListener("click", (e) => {ipcRenderer.send("ServerPage-MinimizeWindow", "");});
+    btnMaximize.addEventListener("click", (e) => {ipcRenderer.send("ServerPage-MaximizeWindow", "");});
+    btnClose.addEventListener("click", (e) => {ipcRenderer.send("ServerPage-CloseWindow", "");});
 });
 
 ipcRenderer.on("GetServerList-Reply", (event, serverListData) => {
@@ -153,7 +159,7 @@ ipcRenderer.on("GetServerList-Reply", (event, serverListData) => {
         refreshHolder.remove();
         container.remove();
         loading.remove();
-        document.getElementById("failMessage").innerText = 
+        document.getElementById("failMessage").innerText =
             "Failed to get servers.\n\nYour internet may be down\nOR\nCreators.TF may be down\n\nGo to our Twitter (@CreatorsTF) for more info!";
     }
 });
